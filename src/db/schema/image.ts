@@ -1,11 +1,4 @@
-import {
-  pgTable,
-  serial,
-  timestamp,
-  text,
-  integer,
-  uuid,
-} from "drizzle-orm/pg-core";
+import { pgTable, timestamp, text, uuid } from "drizzle-orm/pg-core";
 import usersTable from "./user";
 
 const imageTable = pgTable("images", {
@@ -16,7 +9,7 @@ const imageTable = pgTable("images", {
   optimizedUrl: text("optimized_image_url"),
 
   // User reference with serial id
-  userId: integer("owner_user_id")
+  userId: uuid("owner_user_id")
     .notNull()
     .references(() => usersTable.id, { onDelete: "cascade" }),
 

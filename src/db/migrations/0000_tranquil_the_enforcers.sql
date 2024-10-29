@@ -1,24 +1,24 @@
-CREATE TYPE "public"."account_status" AS ENUM('unverified', 'verified', 'suspended', 'deactivated');--> statement-breakpoint
-CREATE TYPE "public"."login_type" AS ENUM('email', 'google');--> statement-breakpoint
-CREATE TYPE "public"."role" AS ENUM('admin', 'user', 'influencer');--> statement-breakpoint
-CREATE TYPE "public"."url_status" AS ENUM('active', 'expired');--> statement-breakpoint
+CREATE TYPE "public"."account_status" AS ENUM('UNVERIFIED', 'VERIFIED', 'SUSPENDED', 'DEACTIVATED');--> statement-breakpoint
+CREATE TYPE "public"."login_type" AS ENUM('EMAIL_PASSWORD', 'GOOGLE');--> statement-breakpoint
+CREATE TYPE "public"."role" AS ENUM('ADMIN', 'USER', 'INFLUENCER');--> statement-breakpoint
+CREATE TYPE "public"."url_status" AS ENUM('ACTIVE', 'EXPIRED');--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "images" (
-	"id" serial PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"original_image_url" text,
 	"optimized_image_url" text,
-	"owner_user_id" integer NOT NULL,
+	"owner_user_id" uuid NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tinyurls" (
-	"id" serial PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"original_url" text NOT NULL,
 	"short_name" varchar(100) NOT NULL,
 	"short_url" varchar(255) NOT NULL,
-	"owner_user_id" integer NOT NULL,
+	"owner_user_id" uuid NOT NULL,
 	"url_validity" timestamp NOT NULL,
-	"url_status" "url_status" DEFAULT 'active' NOT NULL,
+	"url_status" "url_status" DEFAULT 'ACTIVE' NOT NULL,
 	"is_active" boolean DEFAULT true,
 	"total_visits" integer DEFAULT 0,
 	"created_at" timestamp DEFAULT now() NOT NULL,
@@ -26,23 +26,23 @@ CREATE TABLE IF NOT EXISTS "tinyurls" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "users" (
-	"id" serial PRIMARY KEY NOT NULL,
-	"name" varchar(100) NOT NULL,
-	"email" varchar(200) NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"username" varchar(20) NOT NULL,
+	"email" varchar NOT NULL,
 	"avatar_url" text,
 	"password" varchar NOT NULL,
-	"role" "role" DEFAULT 'user' NOT NULL,
-	"login_type" "login_type" DEFAULT 'email' NOT NULL,
+	"role" "role" DEFAULT 'USER' NOT NULL,
+	"login_type" "login_type" DEFAULT 'EMAIL_PASSWORD' NOT NULL,
 	"google_id" varchar(5000),
 	"is_email_verified" boolean DEFAULT false,
-	"verification_otp" varchar(5),
-	"otp_expires_at" timestamp,
-	"account_status" "account_status" DEFAULT 'unverified' NOT NULL,
+	"verify_token" varchar,
+	"verify_token_expiry" timestamp,
+	"account_status" "account_status" DEFAULT 'UNVERIFIED' NOT NULL,
 	"forgot_password_token" varchar,
 	"forgot_password_expiry" timestamp,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,
-	CONSTRAINT "users_name_unique" UNIQUE("name"),
+	CONSTRAINT "users_username_unique" UNIQUE("username"),
 	CONSTRAINT "users_email_unique" UNIQUE("email"),
 	CONSTRAINT "users_google_id_unique" UNIQUE("google_id")
 );
@@ -60,6 +60,6 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "user_id_idx" ON "tinyurls" USING btree ("owner_user_id");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "name_idx" ON "users" USING btree ("name");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "name_idx" ON "users" USING btree ("username");--> statement-breakpoint
 CREATE UNIQUE INDEX IF NOT EXISTS "email_idx" ON "users" USING btree ("email");--> statement-breakpoint
 CREATE UNIQUE INDEX IF NOT EXISTS "google_idx" ON "users" USING btree ("google_id");

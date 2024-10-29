@@ -1,6 +1,5 @@
 import {
   pgTable,
-  serial,
   timestamp,
   varchar,
   boolean,
@@ -27,7 +26,7 @@ const tinyUrlTable = pgTable(
     shortUrl: varchar("short_url", { length: 255 }).notNull(),
 
     // User reference with serial id
-    userId: integer("owner_user_id")
+    userId: uuid("owner_user_id")
       .notNull()
       .references(() => usersTable.id, { onDelete: "cascade" }),
 
