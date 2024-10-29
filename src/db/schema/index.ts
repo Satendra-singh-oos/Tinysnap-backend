@@ -1,8 +1,8 @@
-export { default as image } from "./image";
-export { default as tinyUrl, urlStatusEnum } from "./tinyUrl";
+export { default as images } from "./image";
+export { default as tinyUrls, urlStatusEnum } from "./tinyUrl";
 export {
-  default as user,
+  default as users,
   accountStatusEnum,
-  authTypeEnum,
+  loginTypeEnum,
   roleEnum,
 } from "./user";

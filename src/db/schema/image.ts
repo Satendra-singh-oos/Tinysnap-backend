@@ -1,8 +1,15 @@
-import { pgTable, serial, timestamp, text, integer } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  serial,
+  timestamp,
+  text,
+  integer,
+  uuid,
+} from "drizzle-orm/pg-core";
 import usersTable from "./user";
 
 const imageTable = pgTable("images", {
-  id: serial("id").primaryKey(),
+  id: uuid("id").defaultRandom().primaryKey(),
 
   // images url
   orignalUrl: text("original_image_url"),

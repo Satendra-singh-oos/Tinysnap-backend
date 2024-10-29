@@ -1,5 +1,5 @@
 CREATE TYPE "public"."account_status" AS ENUM('unverified', 'verified', 'suspended', 'deactivated');--> statement-breakpoint
-CREATE TYPE "public"."auth_type" AS ENUM('email', 'google');--> statement-breakpoint
+CREATE TYPE "public"."login_type" AS ENUM('email', 'google');--> statement-breakpoint
 CREATE TYPE "public"."role" AS ENUM('admin', 'user', 'influencer');--> statement-breakpoint
 CREATE TYPE "public"."url_status" AS ENUM('active', 'expired');--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "images" (
@@ -30,14 +30,16 @@ CREATE TABLE IF NOT EXISTS "users" (
 	"name" varchar(100) NOT NULL,
 	"email" varchar(200) NOT NULL,
 	"avatar_url" text,
-	"password" varchar(20),
+	"password" varchar NOT NULL,
 	"role" "role" DEFAULT 'user' NOT NULL,
-	"auth_type" "auth_type" DEFAULT 'email' NOT NULL,
+	"login_type" "login_type" DEFAULT 'email' NOT NULL,
 	"google_id" varchar(5000),
 	"is_email_verified" boolean DEFAULT false,
 	"verification_otp" varchar(5),
 	"otp_expires_at" timestamp,
 	"account_status" "account_status" DEFAULT 'unverified' NOT NULL,
+	"forgot_password_token" varchar,
+	"forgot_password_expiry" timestamp,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,
 	CONSTRAINT "users_name_unique" UNIQUE("name"),

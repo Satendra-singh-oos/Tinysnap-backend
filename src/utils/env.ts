@@ -15,6 +15,14 @@ const EnvSchema = z.object({
   PORT: z.string().default("8000"),
   DATABASE_URL: z.string().min(1),
   CORS_ORIGIN_URL: z.string().min(1),
+  GOOGLE_CLIENT_ID: z.string().min(1),
+  GOOGLE_CLIENT_SECRET: z.string().min(1),
+  GOOGLE_CALLBACK_URL: z.string().min(1),
+  EXPRESS_SESSION_SECRET: z.string().min(1),
+  ACCESS_TOKEN_SECRET: z.string().min(1),
+  ACCESS_TOKEN_EXPIRY: z.string().min(1),
+  RESEND_API_KEY: z.string().min(1),
+  RESEND_FROM_EMAIL: z.string().min(1),
 });
 
 export type EnvSchema = z.infer<typeof EnvSchema>;

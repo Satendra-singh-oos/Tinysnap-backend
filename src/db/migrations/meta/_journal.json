@@ -5,8 +5,50 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1729790299041,
-      "tag": "0000_rich_blue_marvel",
+      "when": 1730178608988,
+      "tag": "0000_equal_human_cannonball",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1730200973758,
+      "tag": "0001_ancient_whirlwind",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1730201794006,
+      "tag": "0002_regular_green_goblin",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1730202182637,
+      "tag": "0003_chemical_lady_mastermind",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1730204165060,
+      "tag": "0004_glorious_magma",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1730213127922,
+      "tag": "0005_public_major_mapleleaf",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1730219946193,
+      "tag": "0006_lumpy_dexter_bennett",
       "breakpoints": true
     }
   ]

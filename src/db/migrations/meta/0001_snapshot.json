@@ -1,6 +1,6 @@
 {
-  "id": "43de12c4-bd0d-4d8b-a312-48fca9f12beb",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "98698e93-cf12-4a07-ac4e-9d935926a0ec",
+  "prevId": "43de12c4-bd0d-4d8b-a312-48fca9f12beb",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -243,14 +243,14 @@
           "notNull": false,
           "default": false
         },
-        "verification_otp": {
-          "name": "verification_otp",
-          "type": "varchar(5)",
+        "verify_token": {
+          "name": "verify_token",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false
         },
-        "otp_expires_at": {
-          "name": "otp_expires_at",
+        "verify_token_expiry": {
+          "name": "verify_token_expiry",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false

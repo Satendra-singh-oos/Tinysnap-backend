@@ -1,6 +1,6 @@
 {
-  "id": "43de12c4-bd0d-4d8b-a312-48fca9f12beb",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "023178f7-d876-4f07-97e5-3a46e1422383",
+  "prevId": "98698e93-cf12-4a07-ac4e-9d935926a0ec",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -192,13 +192,13 @@
         },
         "name": {
           "name": "name",
-          "type": "varchar(100)",
+          "type": "varchar(20)",
           "primaryKey": false,
           "notNull": true
         },
         "email": {
           "name": "email",
-          "type": "varchar(200)",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
@@ -243,14 +243,14 @@
           "notNull": false,
           "default": false
         },
-        "verification_otp": {
-          "name": "verification_otp",
-          "type": "varchar(5)",
+        "verify_token": {
+          "name": "verify_token",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false
         },
-        "otp_expires_at": {
-          "name": "otp_expires_at",
+        "verify_token_expiry": {
+          "name": "verify_token_expiry",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false

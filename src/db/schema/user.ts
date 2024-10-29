@@ -8,46 +8,51 @@ import {
   pgEnum,
   index,
   uniqueIndex,
+  uuid,
 } from "drizzle-orm/pg-core";
 
 // Enums
-export const roleEnum = pgEnum("role", ["admin", "user", "influencer"]);
-export const authTypeEnum = pgEnum("auth_type", ["email", "google"]);
+export const roleEnum = pgEnum("role", ["ADMIN", "USER", "INFLUENCER"]);
+export const loginTypeEnum = pgEnum("login_type", ["EMAIL_PASSWORD", "GOOGLE"]);
 export const accountStatusEnum = pgEnum("account_status", [
-  "unverified",
-  "verified",
-  "suspended",
-  "deactivated",
+  "UNVERIFIED",
+  "VERIFIED",
+  "SUSPENDED",
+  "DEACTIVATED",
 ]);
 
 //users table
 const usersTable = pgTable(
   "users",
   {
-    id: serial("id").primaryKey(),
+    id: uuid("id").defaultRandom().primaryKey(),
 
     // Profile Fields
-    name: varchar("name", { length: 100 }).notNull().unique(),
-    email: varchar("email", { length: 200 }).notNull().unique(),
+    username: varchar("username", { length: 20 }).notNull().unique(),
+    email: varchar("email").notNull().unique(),
     avatarUrl: text("avatar_url"),
-    password: varchar({ length: 20 }),
+    password: varchar("password").notNull(),
 
     // user role;
-    role: roleEnum().notNull().default("user"),
+    role: roleEnum().notNull().default("USER"),
 
     // Authentication Related
-    authType: authTypeEnum("auth_type").notNull().default("email"),
+    loginType: loginTypeEnum("login_type").notNull().default("EMAIL_PASSWORD"),
     googleId: varchar("google_id", { length: 5000 }).unique(),
 
     // Verification fields
     isEmailVerified: boolean("is_email_verified").default(false),
-    verificationOtp: varchar("verification_otp", { length: 5 }),
-    otpExpiresAt: timestamp("otp_expires_at", { mode: "date" }),
+    verifyToken: varchar("verify_token"),
+    verifyTokenExpiry: timestamp("verify_token_expiry", { mode: "date" }),
 
     // Security
     accountStatus: accountStatusEnum("account_status")
       .notNull()
-      .default("unverified"),
+      .default("UNVERIFIED"),
+
+    //forget passoword
+    forgotPasswordToken: varchar("forgot_password_token"),
+    forgotPasswordExpiry: timestamp("forgot_password_expiry", { mode: "date" }),
 
     // Timestamps
     createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
@@ -55,7 +60,7 @@ const usersTable = pgTable(
   },
   (table) => {
     return {
-      nameIdx: index("name_idx").on(table.name),
+      nameIdx: index("name_idx").on(table.username),
       emailIdx: uniqueIndex("email_idx").on(table.email),
       googleIdx: uniqueIndex("google_idx").on(table.googleId),
     };

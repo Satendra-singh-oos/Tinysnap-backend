@@ -1,6 +1,6 @@
 {
-  "id": "43de12c4-bd0d-4d8b-a312-48fca9f12beb",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "122b9bbd-9fca-49f1-968e-ffe573811650",
+  "prevId": "5b5e0789-65fe-4fa4-af4d-f8ab5e8f2d54",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -10,9 +10,10 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
+          "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "original_image_url": {
           "name": "original_image_url",
@@ -73,9 +74,10 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
+          "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "original_url": {
           "name": "original_url",
@@ -186,19 +188,20 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
+          "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
-        "name": {
-          "name": "name",
-          "type": "varchar(100)",
+        "username": {
+          "name": "username",
+          "type": "varchar(20)",
           "primaryKey": false,
           "notNull": true
         },
         "email": {
           "name": "email",
-          "type": "varchar(200)",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
@@ -243,14 +246,14 @@
           "notNull": false,
           "default": false
         },
-        "verification_otp": {
-          "name": "verification_otp",
-          "type": "varchar(5)",
+        "verify_token": {
+          "name": "verify_token",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false
         },
-        "otp_expires_at": {
-          "name": "otp_expires_at",
+        "verify_token_expiry": {
+          "name": "verify_token_expiry",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false
@@ -295,7 +298,7 @@
           "name": "name_idx",
           "columns": [
             {
-              "expression": "name",
+              "expression": "username",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -340,11 +343,11 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "users_name_unique": {
-          "name": "users_name_unique",
+        "users_username_unique": {
+          "name": "users_username_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "name"
+            "username"
           ]
         },
         "users_email_unique": {

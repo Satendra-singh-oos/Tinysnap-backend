@@ -8,18 +8,18 @@ import {
   pgEnum,
   integer,
   index,
+  uuid,
 } from "drizzle-orm/pg-core";
 import usersTable from "./user";
 
 // Enums
-
-export const urlStatusEnum = pgEnum("url_status", ["active", "expired"]);
+export const urlStatusEnum = pgEnum("url_status", ["ACTIVE", "EXPIRED"]);
 
 // tinyUrl Table
 const tinyUrlTable = pgTable(
   "tinyurls",
   {
-    id: serial("id").primaryKey(),
+    id: uuid("id").defaultRandom().primaryKey(),
 
     // URL fields
     originalUrl: text("original_url").notNull(),
@@ -33,7 +33,7 @@ const tinyUrlTable = pgTable(
 
     // Validity and Status
     urlValidity: timestamp("url_validity", { mode: "date" }).notNull(), // Made notNull since it's a key feature
-    status: urlStatusEnum("url_status").notNull().default("active"),
+    status: urlStatusEnum("url_status").notNull().default("ACTIVE"),
     isActive: boolean("is_active").default(true), // Quick check for validity
 
     // Analytics

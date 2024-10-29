@@ -1,6 +1,6 @@
 {
-  "id": "43de12c4-bd0d-4d8b-a312-48fca9f12beb",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "80406790-c8d5-4ff0-ad01-f4a776e74cde",
+  "prevId": "023178f7-d876-4f07-97e5-3a46e1422383",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -190,15 +190,15 @@
           "primaryKey": true,
           "notNull": true
         },
-        "name": {
-          "name": "name",
-          "type": "varchar(100)",
+        "usernname": {
+          "name": "usernname",
+          "type": "varchar(20)",
           "primaryKey": false,
           "notNull": true
         },
         "email": {
           "name": "email",
-          "type": "varchar(200)",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
@@ -243,14 +243,14 @@
           "notNull": false,
           "default": false
         },
-        "verification_otp": {
-          "name": "verification_otp",
-          "type": "varchar(5)",
+        "verify_token": {
+          "name": "verify_token",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false
         },
-        "otp_expires_at": {
-          "name": "otp_expires_at",
+        "verify_token_expiry": {
+          "name": "verify_token_expiry",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false
@@ -295,7 +295,7 @@
           "name": "name_idx",
           "columns": [
             {
-              "expression": "name",
+              "expression": "usernname",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -340,11 +340,11 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "users_name_unique": {
-          "name": "users_name_unique",
+        "users_usernname_unique": {
+          "name": "users_usernname_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "name"
+            "usernname"
           ]
         },
         "users_email_unique": {
