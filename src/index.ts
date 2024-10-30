@@ -1,16 +1,15 @@
 import dotenv from "dotenv";
 import { app } from "./app";
 import { connectDb } from "./db";
+import { env } from "process";
 
 dotenv.config({
   path: "./env",
 });
 
 const main = async () => {
-  app.listen(process.env.PORT || 7680, () => {
-    console.log(
-      `Server is up and running at port : ${process.env.PORT || 8000}`
-    );
+  app.listen(env.PORT || 7680, () => {
+    console.log(`Server is up and running at port : ${env.PORT || 8000}`);
   });
 
   app.on("error", (error) => {
@@ -22,10 +21,8 @@ const main = async () => {
 connectDb()
   .then(() => {
     // console.info("App started");
-    app.listen(process.env.PORT || 7680, () => {
-      console.log(
-        `Server is up and running at port : ${process.env.PORT || 8000}`
-      );
+    app.listen(env.PORT || 7680, () => {
+      console.log(`⚙️  Server is up and running at port : ${env.PORT || 8000}`);
     });
 
     app.on("error", (error) => {

@@ -23,7 +23,6 @@ import {
   UserLoginType,
   UserRolesEnum,
 } from "../constant";
-import { resend } from "../utils/mail/resend";
 import {
   forgatePasswordEmail,
   sendVerificationEmail,
@@ -117,8 +116,8 @@ const handleSocialLogin = asyncHandler(
         .status(301)
         .cookie("accessToken", accessToken, options)
         .redirect(
-          // redirect user to the frontend
-          `${process.env.CLIENT_SSO_REDIRECT_URL}`
+          // redirect user to the frontend endpoint
+          `${env.CLIENT_SSO_REDIRECT_URL}`
         );
     } catch (error: any) {
       return res
@@ -135,9 +134,26 @@ const handleSocialLogin = asyncHandler(
 
 const registerUser = asyncHandler(async (req, res) => {
   try {
-    const { email, username, password } = registerUserValidation.parse(
-      req.body
-    );
+    const result = registerUserValidation.safeParse(req.body);
+
+    if (!result.success) {
+      const registerErrors =
+        result.error.errors.map((err) => ({
+          code: err.code,
+          message: err.message,
+        })) || [];
+
+      return res
+        .status(400)
+        .json(
+          new ApiError(
+            400,
+            `${registerErrors?.length > 0 ? registerErrors[0].message : "Invalid Data In Form"}`
+          )
+        );
+    }
+
+    const { email, password, username } = result.data;
 
     //check for existing user
 
@@ -294,7 +310,26 @@ const verifyEmail = asyncHandler(async (req, res) => {
 
 const loginUser = asyncHandler(async (req, res) => {
   try {
-    const { email, password } = loginUserValidation.parse(req.body);
+    const result = loginUserValidation.safeParse(req.body);
+
+    if (!result.success) {
+      const loginErrors =
+        result.error.errors.map((err) => ({
+          code: err.code,
+          message: err.message,
+        })) || [];
+
+      return res
+        .status(400)
+        .json(
+          new ApiError(
+            400,
+            `${loginErrors?.length > 0 ? loginErrors[0].message : "Invalid Data In Form"}`
+          )
+        );
+    }
+
+    const { email, password } = result.data;
 
     if (!email) {
       return res.status(400).json(new ApiError(400, "Email is required"));
@@ -308,7 +343,7 @@ const loginUser = asyncHandler(async (req, res) => {
         .json(new ApiError(404, "No User Found With This Email"));
     }
 
-    if (user.loginType !== UserLoginType.EMAIL_PASSWORD.toLowerCase()) {
+    if (user.loginType !== UserLoginType.EMAIL_PASSWORD) {
       return res
         .status(404)
         .json(
@@ -348,7 +383,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
     const options = {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: env.NODE_ENV === "production",
     };
 
     return res
@@ -372,7 +407,7 @@ const logoutUser = asyncHandler(async (req, res) => {
   try {
     const options = {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: env.NODE_ENV === "production",
     };
 
     return res
@@ -448,12 +483,33 @@ const resendEmailVerification = asyncHandler(
 
 const forgotPasswordRequest = asyncHandler(async (req, res) => {
   try {
-    const { email } = forgatePasswordValidation.parse(req.body);
+    const result = forgatePasswordValidation.safeParse(req.body);
+
+    if (!result.success) {
+      const forgatePassword =
+        result.error.errors.map((err) => ({
+          code: err.code,
+          message: err.message,
+        })) || [];
+
+      return res
+        .status(400)
+        .json(
+          new ApiError(
+            400,
+            `${forgatePassword?.length > 0 ? forgatePassword[0].message : "Invalid Data In Form"}`
+          )
+        );
+    }
+
+    const { email } = result.data;
 
     const [user] = await db.select().from(users).where(eq(users.email, email));
 
     if (!user) {
-      return res.status(404).json(new ApiResponse(404, "User Dose Not Exist"));
+      return res
+        .status(404)
+        .json(new ApiResponse(404, "User Dose Not Exist With This Email"));
     }
 
     const { unHashedToken, hashedToken, tokenExpiry } =
@@ -469,7 +525,13 @@ const forgotPasswordRequest = asyncHandler(async (req, res) => {
       })
       .where(eq(users.id, user.id));
 
-    await forgatePasswordEmail(user.email, user.username, unHashedToken);
+    await forgatePasswordEmail(
+      user.email,
+      user.username,
+      //  NOTE: Following link should be the link of the frontend page responsible to request password reset
+      // Frontend will send the below token in requset parmas with the new password in the request body to the backend reset password endpoint
+      `${env.FORGOT_PASSWORD_REDIRECT_URL}/${unHashedToken}`
+    );
 
     return res
       .status(200)
@@ -490,7 +552,26 @@ const forgotPasswordRequest = asyncHandler(async (req, res) => {
 const resetForgottoenPassword = asyncHandler(async (req, res) => {
   try {
     const { resetToken } = req.params;
-    const { newPassword } = resetForgottoenPasswordValidation.parse(req.body);
+    const result = resetForgottoenPasswordValidation.safeParse(req.body);
+
+    if (!result.success) {
+      const resetPasswordError =
+        result.error.errors.map((err) => ({
+          code: err.code,
+          message: err.message,
+        })) || [];
+
+      return res
+        .status(400)
+        .json(
+          new ApiError(
+            400,
+            `${resetPasswordError?.length > 0 ? resetPasswordError[0].message : "Invalid Data In Form"}`
+          )
+        );
+    }
+
+    const { newPassword } = result.data;
 
     //create hash from incoming token
     let hashedToken = crypto
@@ -560,8 +641,26 @@ const changeCurrentPassword = asyncHandler(
           .json(new ApiError(403, "UserId is not provided"));
       }
 
-      const { newPassword, oldPassword } =
-        changeCurrentPasswordValidation.parse(req.body);
+      const result = changeCurrentPasswordValidation.safeParse(req.body);
+
+      if (!result.success) {
+        const changePasswordError =
+          result.error.errors.map((err) => ({
+            code: err.code,
+            message: err.message,
+          })) || [];
+
+        return res
+          .status(400)
+          .json(
+            new ApiError(
+              400,
+              `${changePasswordError?.length > 0 ? changePasswordError[0].message : "Invalid Data In Form"}`
+            )
+          );
+      }
+
+      const { newPassword, oldPassword } = result.data;
 
       const [user] = await db
         .select()
@@ -622,7 +721,27 @@ const changeCurrentPassword = asyncHandler(
 const assignRole = asyncHandler(async (req, res) => {
   try {
     const { userId } = req.params;
-    const { role } = userRoleValidation.parse(req.body);
+
+    const result = userRoleValidation.safeParse(req.body);
+
+    if (!result.success) {
+      const changePasswordError =
+        result.error.errors.map((err) => ({
+          code: err.code,
+          message: err.message,
+        })) || [];
+
+      return res
+        .status(400)
+        .json(
+          new ApiError(
+            400,
+            `${changePasswordError?.length > 0 ? changePasswordError[0].message : "Invalid Data In Form"}`
+          )
+        );
+    }
+
+    const { role } = result.data;
 
     const [user] = await db.select().from(users).where(eq(users.id, userId));
 

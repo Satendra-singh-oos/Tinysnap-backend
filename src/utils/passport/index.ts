@@ -64,10 +64,7 @@ try {
           .limit(1);
 
         if (user) {
-          if (
-            user.loginType.toLowerCase() !==
-            UserLoginType.EMAIL_PASSWORD.toLowerCase()
-          ) {
+          if (user.loginType !== UserLoginType.EMAIL_PASSWORD) {
             // If user is registered with some other method, we will ask him/her to use the same method as registered.
             // TODO: We can redirect user to appropriate frontend urls which will show users what went wrong instead of sending response from the backend
 

@@ -7,9 +7,7 @@ import corsOptions from "./middlewares/global/cors";
 import helmetOptions from "./middlewares/global/helmet";
 import rateLimiter from "./middlewares/global/rateLimiter";
 import { V1 } from "./constant";
-import env from "./utils/env";
 import passport from "passport";
-import session from "express-session";
 
 const app: express.Application = express();
 
@@ -25,17 +23,8 @@ app.use(requestIp.mw()); // client ip address
 app.use(rateLimiter()); // Rate limiter to avoid misuse of the service and avoid cost spikes
 app.use(hpp()); // Protect against HTTP Parameter Pollution
 
-// required for passport
-app.use(
-  session({
-    // session secret
-    secret: env.EXPRESS_SESSION_SECRET,
-    resave: true,
-    saveUninitialized: true,
-  })
-);
+// passport for sso
 app.use(passport.initialize());
-app.use(passport.session()); // persistent login sessions
 
 // import routes
 

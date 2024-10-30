@@ -23,6 +23,8 @@ const EnvSchema = z.object({
   ACCESS_TOKEN_EXPIRY: z.string().min(1),
   RESEND_API_KEY: z.string().min(1),
   RESEND_FROM_EMAIL: z.string().min(1),
+  CLIENT_SSO_REDIRECT_URL: z.string().min(1),
+  FORGOT_PASSWORD_REDIRECT_URL: z.string().min(1),
 });
 
 export type EnvSchema = z.infer<typeof EnvSchema>;

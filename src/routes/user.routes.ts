@@ -36,7 +36,6 @@ router.route("/register").post(registerUser);
 router.route("/verify-email/:verificationToken").get(verifyEmail);
 router.route("/login").post(loginUser);
 router.route("/logout").post(logoutUser);
-router.route("/logout").post(logoutUser);
 router.route("/forgot-password").post(forgotPasswordRequest);
 router.route("/reset-password/:resetToken").post(resetForgottoenPassword);
 

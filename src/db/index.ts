@@ -10,9 +10,9 @@ export const db = drizzle(pgsql, { schema: schema });
 export const connectDb = async () => {
   try {
     // Execute a simple query
-    const result = await db.execute("SELECT 1");
-    console.log(result);
-    console.log("Database connected successfully");
+    // const result = await db.execute("SELECT 1");
+    // console.log(result);
+    console.log(" 🍀 Database connected successfully");
     return true;
   } catch (error) {
     console.error("Database connection failed:", error);

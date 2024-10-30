@@ -43,7 +43,7 @@ export const loginUserValidation = z.object({
     .max(20, "Password cannot exceed 100 characters")
     .regex(
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
-      "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+      "Password Not As We Created "
     ),
 });
 
@@ -77,7 +77,7 @@ export const changeCurrentPasswordValidation = z.object({
     .max(20, "Password cannot exceed 100 characters")
     .regex(
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
-      "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+      "Password Not As We Created "
     ),
   newPassword: z
     .string({
