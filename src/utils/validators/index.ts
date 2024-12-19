@@ -94,3 +94,27 @@ export const changeCurrentPasswordValidation = z.object({
 export const userRoleValidation = z.object({
   role: z.enum(["ADMIN", "USER", "INFLUENCER"]),
 });
+
+export const createURLValidation = z.object({
+  originalUrl: z
+    .string()
+    .refine((value) => /^https:\/\/[^\s$.?#].[^\s]*$/i.test(value), {
+      message: "Please enter a valid HTTPS URL",
+    }),
+
+  expireDate: z.date().default(() => {
+    const date = new Date();
+    date.setMonth(date.getMonth() + 6);
+    return date;
+  }),
+
+  customName: z
+    .string()
+    .min(3, "Custom Name Must be minimum of 3 characters")
+    .max(20, "Custom name Must be less then 20 characters")
+    .regex(
+      /^[a-zA-Z\s-]+$/,
+      "Custom can only contain letters, spaces, and hyphens"
+    )
+    .optional(),
+});

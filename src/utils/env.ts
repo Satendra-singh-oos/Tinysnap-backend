@@ -25,6 +25,7 @@ const EnvSchema = z.object({
   RESEND_FROM_EMAIL: z.string().min(1),
   CLIENT_SSO_REDIRECT_URL: z.string().min(1),
   FORGOT_PASSWORD_REDIRECT_URL: z.string().min(1),
+  SERVER_BASE_URL: z.string().min(1),
 });
 
 export type EnvSchema = z.infer<typeof EnvSchema>;

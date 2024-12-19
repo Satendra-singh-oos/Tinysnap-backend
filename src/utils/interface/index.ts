@@ -1,3 +1,8 @@
+import { Request } from "express";
+
+export interface AuthenticatedRequest extends Request {
+  user?: User;
+}
 // Define the profile interface for Google OAuth
 export interface GoogleProfile {
   _json: {

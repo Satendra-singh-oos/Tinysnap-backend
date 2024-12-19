@@ -8,7 +8,7 @@ import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import bcryptjs, { hash } from "bcryptjs";
 import env from "../utils/env";
-import { User } from "../utils/interface";
+import { AuthenticatedRequest, User } from "../utils/interface";
 import {
   changeCurrentPasswordValidation,
   forgatePasswordValidation,
@@ -30,10 +30,6 @@ import {
 import { ApiResponse } from "../utils/ApiResponse";
 
 // Extend the Express Request type to include the user property
-interface AuthenticatedRequest extends Request {
-  user?: User;
-}
-
 async function genrateHashPassword(password: string) {
   //hash password
   const salt = await bcryptjs.genSalt(10);
@@ -205,7 +201,7 @@ const registerUser = asyncHandler(async (req, res) => {
       )}/api/v1/users/verify-email/${unHashedToken}`
     );
 
-    const findCreatedUser = await db
+    const [findCreatedUser] = await db
       .select({
         id: users.id,
         username: users.username,
@@ -292,15 +288,20 @@ const verifyEmail = asyncHandler(async (req, res) => {
         .json(new ApiError(403, `Unable to Verfiy the user`));
     }
 
-    return res
-      .status(200)
-      .json(
-        new ApiResponse(
-          200,
-          { isEmailVerified: true, AccountStatus: "Verified" },
-          "Email is verified"
-        )
-      );
+    // return res
+    //   .status(200)
+    //   .json(
+    //     new ApiResponse(
+    //       200,
+    //       { isEmailVerified: true, AccountStatus: "Verified" },
+    //       "Email is verified"
+    //     )
+    //   );
+
+    return res.status(200).json({
+      message:
+        "Your Email Is Verified You Can Close This Page Thank you for visting us ",
+    });
   } catch (error: any) {
     return res
       .status(500)
